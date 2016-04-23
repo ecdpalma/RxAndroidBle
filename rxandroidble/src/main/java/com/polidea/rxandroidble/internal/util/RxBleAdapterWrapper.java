@@ -2,7 +2,12 @@ package com.polidea.rxandroidble.internal.util;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
 import android.support.annotation.Nullable;
+
+import java.util.List;
 
 public class RxBleAdapterWrapper {
 
@@ -30,5 +35,13 @@ public class RxBleAdapterWrapper {
 
     public void stopLeScan(BluetoothAdapter.LeScanCallback leScanCallback) {
         bluetoothAdapter.stopLeScan(leScanCallback);
+    }
+
+    public void startScan(List<ScanFilter> filters, ScanSettings settings, ScanCallback scanCallback) {
+        bluetoothAdapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
+    }
+
+    public void stopScan(ScanCallback scanCallback) {
+        bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
     }
 }
