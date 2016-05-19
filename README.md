@@ -1,5 +1,5 @@
-# RxAndroidBle [![Build Status](https://travis-ci.org/Polidea/RxAndroidBle.svg?branch=master)](https://travis-ci.org/Polidea/RxAndroidBle) [![Maven Central](https://img.shields.io/maven-central/v/com.polidea.rxandroidble/rxandroidble.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.polidea.rxandroidble%22%20AND%20a%3A%22rxandroidble%22)
-![Polidea](https://raw.githubusercontent.com/Polidea/RxAndroidBle/master/site/viking-large.jpeg "Tailored software services including concept, design, development and testing")
+This fork uses the Nordic compatibility library so List<ScanFilter> and ScanSetting can be passed to the scan method.
+
 ## Introduction
 
 RxAndroidBle is a powerful painkiller for Android's Bluetooth Low Energy headaches. It is backed by RxJava, implementing complicated APIs as handy reactive observables. The library does for you:
@@ -28,7 +28,7 @@ Subscription scanSubscription = rxBleClient.scanBleDevices()
 	.subscribe(rxBleScanResult -> {
 	    // Process scan result here.
 	});
-	
+
 // When done, just unsubscribe.
 scanSubscription.unsubscribe();
 ```
@@ -44,7 +44,7 @@ Subscription subscription = device.establishConnection(context, false) // <-- au
 	.subscribe(rxBleConnection -> {
 		// All GATT operations are done through the rxBleConnection.
 	});
-	
+
 // When done... unsubscribe and forget about connection teardown :)
 subscription.unsubscribe();
 ```
