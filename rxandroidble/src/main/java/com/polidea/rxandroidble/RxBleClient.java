@@ -1,8 +1,5 @@
 package com.polidea.rxandroidble;
 
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +9,9 @@ import com.polidea.rxandroidble.internal.RxBleLog;
 import java.util.List;
 import java.util.UUID;
 
+import no.nordicsemi.android.support.v18.scanner.ScanFilter;
+import no.nordicsemi.android.support.v18.scanner.ScanResult;
+import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 import rx.Observable;
 
 public abstract class RxBleClient {
@@ -57,6 +57,7 @@ public abstract class RxBleClient {
      * @throws com.polidea.rxandroidble.exceptions.BleScanException emits in case of error starting the scan
      */
     public abstract Observable<RxBleScanResult> scanBleDevices(@Nullable UUID... filterServiceUUIDs);
+
 
     public abstract Observable<ScanResult> scanBleDevices(List<ScanFilter> filters, ScanSettings settings);
 }

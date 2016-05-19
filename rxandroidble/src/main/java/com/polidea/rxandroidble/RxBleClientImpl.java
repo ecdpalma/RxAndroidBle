@@ -2,9 +2,7 @@ package com.polidea.rxandroidble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
+
 import android.content.Context;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -16,7 +14,7 @@ import com.polidea.rxandroidble.internal.RxBleDeviceProvider;
 import com.polidea.rxandroidble.internal.RxBleInternalScanResult;
 import com.polidea.rxandroidble.internal.RxBleRadio;
 import com.polidea.rxandroidble.internal.operations.RxBleRadioOperationScan;
-import com.polidea.rxandroidble.internal.operations.RxBleRadioOperationScan21;
+import com.polidea.rxandroidble.internal.operations.RxBleRadioOperationScanCompat;
 import com.polidea.rxandroidble.internal.radio.RxBleRadioImpl;
 import com.polidea.rxandroidble.internal.util.BleConnectionCompat;
 import com.polidea.rxandroidble.internal.util.LocationServicesStatus;
@@ -29,6 +27,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
+import no.nordicsemi.android.support.v18.scanner.ScanFilter;
+import no.nordicsemi.android.support.v18.scanner.ScanResult;
+import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 import rx.Observable;
 
 class RxBleClientImpl extends RxBleClient {
@@ -40,10 +42,12 @@ class RxBleClientImpl extends RxBleClient {
     private final Map<List<ScanFilter>, Observable<ScanResult>> queuedScanOperations21 = new HashMap<>();
 
     private final RxBleAdapterWrapper rxBleAdapterWrapper;
+    private final BluetoothLeScannerCompat scanner;
     private final Observable<BleAdapterState> rxBleAdapterStateObservable;
     private final LocationServicesStatus locationServicesStatus;
 
     RxBleClientImpl(RxBleAdapterWrapper rxBleAdapterWrapper,
+                    BluetoothLeScannerCompat scanner,
                     RxBleRadio rxBleRadio,
                     Observable<BleAdapterState> adapterStateObservable,
                     UUIDUtil uuidUtil,
@@ -52,6 +56,7 @@ class RxBleClientImpl extends RxBleClient {
         this.uuidUtil = uuidUtil;
         this.rxBleRadio = rxBleRadio;
         this.rxBleAdapterWrapper = rxBleAdapterWrapper;
+        this.scanner = scanner;
         this.rxBleAdapterStateObservable = adapterStateObservable;
         this.locationServicesStatus = locationServicesStatus;
         rxBleDeviceProvider = new RxBleDeviceProvider(this.rxBleAdapterWrapper, this.rxBleRadio, bleConnectionCompat);
@@ -60,6 +65,7 @@ class RxBleClientImpl extends RxBleClient {
     public static RxBleClientImpl getInstance(@NonNull Context context) {
         return new RxBleClientImpl(
                 new RxBleAdapterWrapper(BluetoothAdapter.getDefaultAdapter()),
+                BluetoothLeScannerCompat.getScanner(),
                 new RxBleRadioImpl(),
                 new RxBleAdapterStateObservable(context.getApplicationContext()),
                 new UUIDUtil(),
@@ -170,8 +176,8 @@ class RxBleClientImpl extends RxBleClient {
     }
 
     private Observable<ScanResult> createScanOperation(List<ScanFilter> filters, ScanSettings settings) {
-        final RxBleRadioOperationScan21 scanOperation =
-                new RxBleRadioOperationScan21(filters, settings, rxBleAdapterWrapper);
+        final RxBleRadioOperationScanCompat scanOperation =
+                new RxBleRadioOperationScanCompat(filters, settings, scanner);
         return rxBleRadio.queue(scanOperation)
                 .doOnUnsubscribe(() -> {
                     synchronized (queuedScanOperations21) {
