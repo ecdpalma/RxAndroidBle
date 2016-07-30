@@ -8,6 +8,7 @@ import android.bluetooth.le.ScanSettings;
 import android.support.annotation.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public class RxBleAdapterWrapper {
 
@@ -43,5 +44,9 @@ public class RxBleAdapterWrapper {
 
     public void stopScan(ScanCallback scanCallback) {
         bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+    }
+
+    public Set<BluetoothDevice> getBondedDevices() {
+        return bluetoothAdapter.getBondedDevices();
     }
 }

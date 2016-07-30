@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.polidea.rxandroidble.internal.RxBleLog;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import no.nordicsemi.android.support.v18.scanner.ScanFilter;
@@ -44,6 +45,8 @@ public abstract class RxBleClient {
      * @return Handle for Bluetooth LE operations.
      */
     public abstract RxBleDevice getBleDevice(@NonNull String macAddress);
+
+    public abstract Set<RxBleDevice> getBondedDevices();
 
     /**
      * Returns an infinite observable emitting BLE scan results.

@@ -45,7 +45,7 @@ public class RxBleRadioOperationScanCompat extends RxBleRadioOperation<ScanResul
     }
 
     @Override
-    public void run() {
+    public void protectedRun() {
         if (scanSettings == null) {
             scanner.startScan(filters, new ScanSettings.Builder().build(), scanCallback);
         } else if (filters == null) {
